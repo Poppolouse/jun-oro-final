@@ -1,19 +1,53 @@
 {
-  "name": "jun-oro",
-  "version": "0.1.0",
-  "private": true,
+  "name": "neumorphism-portfolio",
+  "version": "1.0.0",
+  "description": "Modern portfolio with neumorphism and glassmorphism design",
+  "main": "index.html",
   "scripts": {
-    "start": "node ./dist/index.js",
-    "build": "tsc -p .",
-    "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma",
-    "migrate": "npx prisma migrate dev --schema=prisma/schema.prisma",
-    "migrate:deploy": "npx prisma migrate deploy --schema=prisma/schema.prisma",
-    "migrate:psql": "render psql dpg-d44upfeuk2gs73foc5v0-a -f migrations/initial.sql"
+    "build": "npm run optimize-css && npm run optimize-js && npm run validate-html",
+    "optimize-css": "postcss css/*.css --dir dist/css --use autoprefixer --use cssnano --output-style compressed",
+    "optimize-js": "terser js/*.js --compress --mangle --output-dir dist/js",
+    "validate-html": "html-validate index.html",
+    "test": "npm run validate-html && npm run test-lighthouse",
+    "test-lighthouse": "lhci autorun",
+    "serve": "http-server . -p 8080 -c-1",
+    "deploy:github-pages": "gh-pages -d .",
+    "preview": "npm run build && npm run serve",
+    "validate-deployment": "chmod +x scripts/deploy-validate.sh && ./scripts/deploy-validate.sh",
+    "deploy:validate": "npm run build && npm run validate-deployment"
   },
-  "engines": {
-    "node": ">=18"
-  },
+  "keywords": [
+    "portfolio",
+    "neumorphism",
+    "glassmorphism",
+    "pwa",
+    "static-site"
+  ],
+  "author": "Portfolio Owner",
+  "license": "MIT",
   "devDependencies": {
-    "prisma": "^5.0.0"
-  }
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "gh-pages": "^6.0.0",
+    "html-validate": "^8.9.0",
+    "http-server": "^14.1.1",
+    "lhci": "^0.12.0",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
+    "terser": "^5.24.0"
+  },
+  "dependencies": {
+    "web-vitals": "^3.5.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/neumorphism-portfolio.git"
+  },
+  "homepage": "https://username.github.io/neumorphism-portfolio"
 }

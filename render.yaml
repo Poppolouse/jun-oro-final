@@ -1,0 +1,110 @@
+services:
+  # Static Site Service
+  - type: web
+    name: neumorphism-portfolio
+    env: static
+    plan: free
+    buildCommand: "npm ci && npm run build"
+    staticPublishPath: .
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 18
+    headers:
+      - path: "/*"
+        name: "X-Frame-Options"
+        value: "DENY"
+      - path: "/*"
+        name: "X-XSS-Protection"
+        value: "1; mode=block"
+      - path: "/*"
+        name: "X-Content-Type-Options"
+        value: "nosniff"
+      - path: "/*"
+        name: "Referrer-Policy"
+        value: "strict-origin-when-cross-origin"
+      - path: "/*"
+        name: "Permissions-Policy"
+        value: "camera=(), microphone=(), geolocation=()"
+    routes:
+      - type: redirect
+        src: /home
+        dest: /#home
+      - type: redirect
+        src: /about
+        dest: /#about
+      - type: redirect
+        src: /projects
+        dest: /#projects
+      - type: redirect
+        src: /skills
+        dest: /#skills
+      - type: redirect
+        src: /contact
+        dest: /#contact
+    # Performance and caching
+    cache:
+      - path: "/css/*"
+        maxAge: 31536000
+      - path: "/js/*"
+        maxAge: 31536000
+      - path: "/*.woff2"
+        maxAge: 31536000
+      - path: "/*.svg"
+        maxAge: 31536000
+      - path: "/sw.js"
+        maxAge: 0
+      - path: "/manifest.json"
+        maxAge: 0
+
+# Environment-specific configurations
+environments:
+  production:
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SITE_URL
+        value: https://neumorphism-portfolio.onrender.com
+  preview:
+    envVars:
+      - key: NODE_ENV
+        value: development
+      - key: SITE_URL
+        value: https://neumorphism-portfolio.onrender.com
+
+# Health checks
+healthCheckPath: /
+healthCheckTimeout: 30
+
+# Auto-deploy settings
+autoDeploy: true
+
+# Scaling settings
+scaling:
+  minInstances: 1
+  maxInstances: 1
+
+# Build optimization
+buildFilter:
+  paths:
+    include:
+      - "package.json"
+      - "package-lock.json"
+      - "index.html"
+      - "css/**"
+      - "js/**"
+      - "manifest.json"
+      - "sw.js"
+      - "performance.config.js"
+    exclude:
+      - "node_modules/**"
+      - ".git/**"
+      - "*.md"
+      - ".env*"
+      - "dist/**"
+
+# Performance settings
+performance:
+  enabled: true
+  region: oregon

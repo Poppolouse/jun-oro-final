@@ -1,0 +1,170 @@
+# Node.js
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist
+build
+.next
+.nuxt
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+*.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# next.js build output
+.next
+
+# nuxt.js build output
+.nuxt
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Testing
+test
+tests
+__tests__
+*.test.js
+*.spec.js
+
+# CI/CD
+.github
+.travis.yml
+.circleci
+
+# Docker
+Dockerfile
+docker-compose.yml
+docker-compose.*.yml
+
+# Deployment configurations
+netlify.toml
+vercel.json
+render.yaml
+
+# Performance reports
+lighthouse-results
+.lighthouseci
+security-reports
+vitals-results
+
+# Temporary files
+tmp
+temp
+.tmp
+
+# Backup files
+*.bak
+*.backup
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+
+# Large media files (should be optimized separately)
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.webm
+*.mkv
+
+# Fonts (if not optimized)
+*.ttf
+*.otf
+*.woff
+*.eot
+
+# Images (if not optimized)
+*.psd
+*.ai
+*.sketch
+*.fig
+
+# Config files that shouldn't be in container
+webpack.config.js
+rollup.config.js
+gulpfile.js
+Gruntfile.js
+.babelrc
+.browserslistrc

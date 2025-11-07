@@ -1,0 +1,19 @@
+{
+  "current_project": {
+    "name": "Neumorphism Portfolio Website",
+    "status": "planning",
+    "created_at": "2025-11-07T19:56:00.540Z",
+    "last_updated": "2025-11-07T19:56:00.540Z",
+    "description": "Bütün geliştirilen web app'leri barındıracak neumorphism tasarımına sahip portfolyo websitesi",
+    "requirements": [
+      "Neumorphism design system",
+      "Responsive tasarım",
+      "Proje sergileme alanı",
+      "Modern ve etkileyici UI"
+    ],
+    "current_phase": "analysis",
+    "team": [],
+    "timeline": "TBD",
+    "budget": "TBD"
+  }
+}

@@ -1,0 +1,13 @@
+name: Check prohibited roo-code modes
+on: [push, pull_request]
+
+jobs:
+  check-prohibited-modes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run prohibited modes check
+        run: |
+          chmod +x scripts/ci/check-prohibited-modes.sh
+          bash scripts/ci/check-prohibited-modes.sh

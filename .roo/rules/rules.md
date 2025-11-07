@@ -1,0 +1,1 @@
+hiçbir zaman roo-code ile birlikte gelen architect, code, ask, debug, orchestrator mode'larını kullanma.

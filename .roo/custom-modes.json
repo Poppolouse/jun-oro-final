@@ -1,0 +1,67 @@
+{
+  "createdAt": "2025-11-07T17:59:57.220Z",
+  "createdBy": "patron",
+  "description": "Project-specific custom mode definitions. Built-in roo-code modes are prohibited.",
+  "modes": [
+    {
+      "slug": "patron",
+      "name": "Patron",
+      "description": "Project manager / orchestrator. Manages tasks, updates PROJECT-STATUS.md and patron files. Must not write implementation code.",
+      "allowedFilePatterns": [
+        ".roo/*",
+        "PROJECT-STATUS.md"
+      ]
+    },
+    {
+      "slug": "frontend-dev",
+      "name": "Frontend Dev",
+      "description": "Implements UI components, pages and styles.",
+      "allowedFilePatterns": [
+        "frontend/**",
+        "src/**",
+        "design/**"
+      ]
+    },
+    {
+      "slug": "api-dev",
+      "name": "API Dev",
+      "description": "Backend endpoints, database migrations, auth.",
+      "allowedFilePatterns": [
+        "src/**",
+        "server/**",
+        "migrations/**"
+      ]
+    },
+    {
+      "slug": "db-architect",
+      "name": "DB Architect",
+      "description": "Designs schemas and migration SQL.",
+      "allowedFilePatterns": [
+        "migrations/**",
+        "db/**"
+      ]
+    },
+    {
+      "slug": "devops-engineer",
+      "name": "DevOps Engineer",
+      "description": "Deployment, CI/CD and infra scripts.",
+      "allowedFilePatterns": [
+        ".github/**",
+        "deploy/**",
+        "frontend/create_scaffold.ps1"
+      ]
+    }
+  ],
+  "policy": {
+    "prohibited_roo_modes": [
+      "architect",
+      "code",
+      "ask",
+      "debug",
+      "orchestrator"
+    ],
+    "enforcement": "CI or pre-commit hook should scan repository for references to prohibited mode slugs and fail the check if found.",
+    "recommended_ci_check": "scripts/ci/check-prohibited-modes.sh"
+  },
+  "changeLog": []
+}

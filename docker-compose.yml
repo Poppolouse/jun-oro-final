@@ -1,0 +1,145 @@
+# Docker Compose configuration for Neumorphism Portfolio Website
+# Development environment with hot reload and optimization
+
+version: '3.8'
+
+services:
+  # Main application service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: neumorphism-portfolio-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - SITE_URL=http://localhost:8080
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Production build service
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: neumorphism-portfolio-prod
+    ports:
+      - "3000:8080"
+    environment:
+      - NODE_ENV=production
+      - SITE_URL=http://localhost:3000
+    networks:
+      - portfolio-network
+    profiles:
+      - production
+    healthcheck:
+      test: ["CMD", "/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Nginx reverse proxy (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: neumorphism-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - portfolio-network
+    profiles:
+      - reverse-proxy
+    restart: unless-stopped
+
+  # Performance monitoring with Lighthouse
+  lighthouse:
+    image: patrickhulce/lighthouse-ci:latest
+    container_name: neumorphism-lighthouse
+    volumes:
+      - .:/app
+      - ./lighthouse-results:/lighthouse-results
+    command: >
+      sh -c "
+        mkdir -p /lighthouse-results &&
+        lhci autorun --config=/app/.lighthouserc.js
+      "
+    networks:
+      - portfolio-network
+    profiles:
+      - testing
+    depends_on:
+      - app
+
+  # Security scanning with Trivy
+  security-scan:
+    image: aquasec/trivy:latest
+    container_name: neumorphism-security-scan
+    volumes:
+      - .:/app
+      - ./security-reports:/reports
+    command: >
+      sh -c "
+        mkdir -p /reports &&
+        trivy fs --format json --output /reports/trivy-report.json /app &&
+        trivy fs --format table /app
+      "
+    networks:
+      - portfolio-network
+    profiles:
+      - security
+
+  # Web Vitals monitoring
+  web-vitals:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+    container_name: neumorphism-web-vitals
+    volumes:
+      - .:/app
+      - ./vitals-results:/results
+    command: >
+      sh -c "
+        mkdir -p /results &&
+        npm run test-lighthouse &&
+        cp -r .lighthouseci/* /results/ || echo 'No Lighthouse results found'
+      "
+    networks:
+      - portfolio-network
+    profiles:
+      - monitoring
+    depends_on:
+      - app
+
+networks:
+  portfolio-network:
+    driver: bridge
+    name: neumorphism-portfolio-network
+
+volumes:
+  node_modules:
+  dist:
+  lighthouse-results:
+  security-reports:
+  vitals-results:

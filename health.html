@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Check - Neumorphism Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: #0a0e27;
+            color: #00ff88;
+            line-height: 1.5;
+        }
+        .health-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .status-healthy {
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+        .status-unhealthy {
+            background: #ff4444;
+            box-shadow: 0 0 10px #ff4444;
+        }
+        .check-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+        .check-pass {
+            border-left: 3px solid #00ff88;
+        }
+        .check-fail {
+            border-left: 3px solid #ff4444;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="health-container">
+        <h1>🏥 Health Check</h1>
+        <div class="status">
+            <div class="status-indicator status-healthy" id="status-indicator"></div>
+            <div id="status-text">Checking...</div>
+        </div>
+        
+        <div id="checks">
+            <div class="check-item" id="check-html">
+                <strong>HTML Structure:</strong> <span id="check-html-status">Checking...</span>
+            </div>
+            <div class="check-item" id="check-css">
+                <strong>CSS Files:</strong> <span id="check-css-status">Checking...</span>
+            </div>
+            <div class="check-item" id="check-js">
+                <strong>JavaScript:</strong> <span id="check-js-status">Checking...</span>
+            </div>
+            <div class="check-item" id="check-sw">
+                <strong>Service Worker:</strong> <span id="check-sw-status">Checking...</span>
+            </div>
+            <div class="check-item" id="check-manifest">
+                <strong>PWA Manifest:</strong> <span id="check-manifest-status">Checking...</span>
+            </div>
+            <div class="check-item" id="check-performance">
+                <strong>Performance:</strong> <span id="check-performance-status">Checking...</span>
+            </div>
+        </div>
+        
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+
+    <script>
+        // Health check implementation
+        class HealthChecker {
+            constructor() {
+                this.checks = {
+                    html: false,
+                    css: false,
+                    js: false,
+                    sw: false,
+                    manifest: false,
+                    performance: false
+                };
+                this.startTime = performance.now();
+            }
+
+            async runChecks() {
+                await this.checkHTML();
+                await this.checkCSS();
+                await this.checkJS();
+                await this.checkServiceWorker();
+                await this.checkManifest();
+                await this.checkPerformance();
+                this.updateOverallStatus();
+                this.updateTimestamp();
+            }
+
+            async checkHTML() {
+                try {
+                    // Check if HTML structure is valid
+                    const hasRequiredElements = document.querySelector('nav') && 
+                                            document.querySelector('main') && 
+                                            document.querySelector('footer');
+                    
+                    if (hasRequiredElements) {
+                        this.checks.html = true;
+                        this.updateCheckStatus('html', '✅ Valid HTML structure', 'pass');
+                    } else {
+                        this.updateCheckStatus('html', '❌ Missing required elements', 'fail');
+                    }
+                } catch (error) {
+                    this.updateCheckStatus('html', '❌ HTML check failed', 'fail');
+                }
+            }
+
+            async checkCSS() {
+                try {
+                    // Check if CSS files are loaded
+                    const stylesheets = Array.from(document.styleSheets);
+                    const loadedSheets = stylesheets.filter(sheet => sheet.cssRules !== null);
+                    
+                    if (loadedSheets.length > 0) {
+                        this.checks.css = true;
+                        this.updateCheckStatus('css', `✅ ${loadedSheets.length} CSS files loaded`, 'pass');
+                    } else {
+                        this.updateCheckStatus('css', '❌ No CSS files loaded', 'fail');
+                    }
+                } catch (error) {
+                    this.updateCheckStatus('css', '❌ CSS check failed', 'fail');
+                }
+            }
+
+            async checkJS() {
+                try {
+                    // Check if JavaScript is working
+                    const hasRequiredFeatures = typeof window !== 'undefined' &&
+                                           typeof document !== 'undefined' &&
+                                           typeof fetch !== 'undefined';
+                    
+                    if (hasRequiredFeatures) {
+                        this.checks.js = true;
+                        this.updateCheckStatus('js', '✅ JavaScript working', 'pass');
+                    } else {
+                        this.updateCheckStatus('js', '❌ JavaScript features missing', 'fail');
+                    }
+                } catch (error) {
+                    this.updateCheckStatus('js', '❌ JavaScript check failed', 'fail');
+                }
+            }
+
+            async checkServiceWorker() {
+                try {
+                    if ('serviceWorker' in navigator) {
+                        const registration = await navigator.serviceWorker.getRegistration();
+                        if (registration && registration.active) {
+                            this.checks.sw = true;
+                            this.updateCheckStatus('sw', '✅ Service Worker active', 'pass');
+                        } else {
+                            this.updateCheckStatus('sw', '⚠️ Service Worker registered but not active', 'fail');
+                        }
+                    } else {
+                        this.updateCheckStatus('sw', '⚠️ Service Worker not supported', 'fail');
+                    }
+                } catch (error) {
+                    this.updateCheckStatus('sw', '❌ Service Worker check failed', 'fail');
+                }
+            }
+
+            async checkManifest() {
+                try {
+                    const response = await fetch('/manifest.json');
+                    if (response.ok) {
+                        const manifest = await response.json();
+                        if (manifest.name && manifest.start_url) {
+                            this.checks.manifest = true;
+                            this.updateCheckStatus('manifest', '✅ PWA Manifest valid', 'pass');
+                        } else {
+                            this.updateCheckStatus('manifest', '❌ Invalid PWA Manifest', 'fail');
+                        }
+                    } else {
+                        this.updateCheckStatus('manifest', '❌ PWA Manifest not found', 'fail');
+                    }
+                } catch (error) {
+                    this.updateCheckStatus('manifest', '❌ Manifest check failed', 'fail');
+                }
+            }
+
+            async checkPerformance() {
+                try {
+                    // Simple performance check
+                    const loadTime = performance.now() - this.startTime;
+                    const isPerformant = loadTime < 3000; // Less than 3 seconds
+                    
+                    if (isPerformant) {
+                        this.checks.performance = true;
+                        this.updateCheckStatus('performance', `✅ Load time: ${Math.round(loadTime)}ms`, 'pass');
+                    } else {
+                        this.updateCheckStatus('performance', `❌ Slow load time: ${Math.round(loadTime)}ms`, 'fail');
+                    }
+                } catch (error) {
+                    this.updateCheckStatus('performance', '❌ Performance check failed', 'fail');
+                }
+            }
+
+            updateCheckStatus(check, message, status) {
+                const element = document.getElementById(`check-${check}-status`);
+                const container = document.getElementById(`check-${check}`);
+                
+                if (element && container) {
+                    element.textContent = message;
+                    container.className = `check-item check-${status}`;
+                }
+            }
+
+            updateOverallStatus() {
+                const allPassed = Object.values(this.checks).every(check => check === true);
+                const indicator = document.getElementById('status-indicator');
+                const text = document.getElementById('status-text');
+                
+                if (allPassed) {
+                    indicator.className = 'status-indicator status-healthy';
+                    text.textContent = '✅ All systems operational';
+                } else {
+                    indicator.className = 'status-indicator status-unhealthy';
+                    text.textContent = '⚠️ Some issues detected';
+                }
+            }
+
+            updateTimestamp() {
+                const timestamp = document.getElementById('timestamp');
+                if (timestamp) {
+                    timestamp.textContent = `Last checked: ${new Date().toISOString()}`;
+                }
+            }
+        }
+
+        // Run health check when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const healthChecker = new HealthChecker();
+            healthChecker.runChecks();
+        });
+    </script>
+</body>
+</html>
