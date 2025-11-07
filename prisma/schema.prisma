@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+}
+
+enum DeploymentStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+// Models
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  password   String
+  name       String?
+  avatarUrl  String?
+  role       Role      @default(USER)
+  apps       App[]
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model App {
+  id          String       @id @default(uuid())
+  owner       User         @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  name        String
+  slug        String       @unique
+  description String?
+  repoUrl     String?
+  isPublic    Boolean      @default(false)
+  settings    Json?
+  deployments Deployment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([ownerId])
+  @@index([createdAt])
+}
+
+model Deployment {
+  id         String           @id @default(uuid())
+  app        App              @relation(fields: [appId], references: [id])
+  appId      String
+  version    String?
+  status     DeploymentStatus @default(PENDING)
+  logUrl     String?
+  createdBy  String?
+  deployedAt DateTime?
+  createdAt  DateTime         @default(now())
+
+  @@index([appId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  app        App?     @relation(fields: [appId], references: [id])
+  appId      String?
+  eventType  String
+  payload    Json
+  source     String?
+  occurredAt DateTime @default(now())
+
+  @@index([appId, occurredAt])
+  @@index([eventType])
+}

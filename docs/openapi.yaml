@@ -1,0 +1,474 @@
+openapi: 3.0.3
+info:
+  title: Jun-Oro API
+  version: "1.0.0"
+  description: >
+    API contract for Phase‑1: authentication (JWT), apps CRUD, deployments, and analytics ingestion.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /auth/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRegister'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Validation error
+  /auth/login:
+    post:
+      summary: Authenticate and receive JWT
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+  /apps:
+    get:
+      summary: List apps with pagination, filtering and sorting
+      tags:
+        - Apps
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            default: createdAt
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/App'
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      total:
+                        type: integer
+    post:
+      summary: Create a new app
+      tags:
+        - Apps
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/App'
+        '400':
+          description: Validation error
+        '401':
+          description: Authentication required
+  /apps/{appId}:
+    parameters:
+      - name: appId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get app details
+      tags:
+        - Apps
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/App'
+        '404':
+          description: Not found
+    put:
+      summary: Update an app
+      tags:
+        - Apps
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppUpdate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/App'
+        '400':
+          description: Validation error
+        '401':
+          description: Authentication required
+        '404':
+          description: Not found
+    delete:
+      summary: Delete an app
+      tags:
+        - Apps
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: No content
+        '401':
+          description: Authentication required
+        '404':
+          description: Not found
+  /apps/{appId}/deployments:
+    get:
+      summary: List deployments for an app
+      tags:
+        - Deployments
+      parameters:
+        - name: appId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Deployment'
+    post:
+      summary: Create a deployment for an app
+      tags:
+        - Deployments
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeploymentCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Deployment'
+  /deployments/{deploymentId}:
+    parameters:
+      - name: deploymentId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get deployment details
+      tags:
+        - Deployments
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Deployment'
+        '404':
+          description: Not found
+  /analytics/events:
+    post:
+      summary: Ingest analytics events (batch)
+      tags:
+        - Analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/AnalyticsEventIn'
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      ingested:
+                        type: integer
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuthRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+    AuthRegister:
+      allOf:
+        - $ref: '#/components/schemas/AuthRequest'
+        - type: object
+          properties:
+            name:
+              type: string
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+            user:
+              $ref: '#/components/schemas/User'
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        avatarUrl:
+          type: string
+        role:
+          type: string
+    App:
+      type: object
+      properties:
+        id:
+          type: string
+        ownerId:
+          type: string
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        repoUrl:
+          type: string
+        isPublic:
+          type: boolean
+        settings:
+          type: object
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    AppCreate:
+      type: object
+      required:
+        - name
+        - slug
+      properties:
+        name:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        repoUrl:
+          type: string
+        isPublic:
+          type: boolean
+        settings:
+          type: object
+    AppUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        repoUrl:
+          type: string
+        isPublic:
+          type: boolean
+        settings:
+          type: object
+    Deployment:
+      type: object
+      properties:
+        id:
+          type: string
+        appId:
+          type: string
+        version:
+          type: string
+        status:
+          type: string
+        logUrl:
+          type: string
+        createdBy:
+          type: string
+        deployedAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+    DeploymentCreate:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: string
+        createdBy:
+          type: string
+    AnalyticsEventIn:
+      type: object
+      required:
+        - eventType
+        - payload
+      properties:
+        appId:
+          type: string
+        eventType:
+          type: string
+        payload:
+          type: object
+        source:
+          type: string
+        occurredAt:
+          type: string
+          format: date-time
+    AnalyticsEvent:
+      allOf:
+        - $ref: '#/components/schemas/AnalyticsEventIn'
+        - type: object
+          properties:
+            id:
+              type: string
+            occurredAt:
+              type: string
+              format: date-time

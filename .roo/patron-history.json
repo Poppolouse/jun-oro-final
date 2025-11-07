@@ -1,0 +1,44 @@
+{
+  "createdAt": "2025-11-07T17:04:00.000Z",
+  "decisions": [
+    {
+      "id": "d1",
+      "date": "2025-11-07T17:06:00.000Z",
+      "decision": "MVP direction: multi-app host hub",
+      "reason": "User chose to host and showcase multiple personal web applications (preferred over landing/blog, productized, marketplace variants).",
+      "by": "user"
+    },
+    {
+      "id": "d2",
+      "date": "2025-11-07T17:58:08.906Z",
+      "decision": "Prohibit default roo-code modes",
+      "reason": "User requested that built-in roo-code modes (architect, code, ask, debug, orchestrator) must never be used; only custom project-specific modes are allowed.",
+      "by": "user"
+    },
+    {
+      "id": "d3",
+      "date": "2025-11-07T18:19:47.000Z",
+      "decision": "Approve Phase 1 detailed plan & task breakdown",
+      "reason": "Patron approved the Phase 1 detailed plan, created the ordered todo list and assigned owners/estimates.",
+      "by": "patron"
+    },
+    {
+      "id": "d4",
+      "date": "2025-11-07T18:29:11.000Z",
+      "decision": "Infra credentials provided by user",
+      "reason": "User pasted Render API key and Postgres connection strings into chat. Patron recorded receipt but will not store secrets in the repository. Recommended storing secrets in Render service environment variables or CI secret storage.",
+      "by": "user"
+    },
+    {
+      "id": "d5",
+      "date": "2025-11-07T19:23:00.000Z",
+      "decision": "Applied initial SQL migration to Render Postgres (idempotent errors ignored)",
+      "reason": "Migration was executed using local psql wrapper against Render DB. Several objects already existed; command completed with errors indicating pre-existing types/tables/indexes. Verified that tables exist.",
+      "by": "automation"
+    }
+  ],
+  "learnings": [
+    "Do not store secrets in repo. Use render.yaml and .env.example placeholders.",
+    "Render CLI may not be available on developer machines; provide CI fallback with prisma migrate deploy."
+  ]
+}

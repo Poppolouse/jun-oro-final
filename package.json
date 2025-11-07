@@ -1,0 +1,19 @@
+{
+  "name": "jun-oro",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "build": "tsc -p .",
+    "prisma:generate": "npx prisma generate --schema=prisma/schema.prisma",
+    "migrate": "npx prisma migrate dev --schema=prisma/schema.prisma",
+    "migrate:deploy": "npx prisma migrate deploy --schema=prisma/schema.prisma",
+    "migrate:psql": "render psql dpg-d44upfeuk2gs73foc5v0-a -f migrations/initial.sql"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "prisma": "^5.0.0"
+  }
+}
