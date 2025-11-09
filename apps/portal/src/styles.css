@@ -119,3 +119,13 @@ body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter,
 }
 .card-title { font-size: 18px; font-weight: 600; margin: 0 0 6px; }
 .card-desc { font-size: 14px; color: var(--text-secondary); margin: 0; }
+
+/* Footer Styles */
+.footer {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  border-top: 1px solid #E9ECEF;
+}
