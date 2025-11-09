@@ -19,9 +19,13 @@
   "devDependencies": {
     "dotenv": "^17.2.3",
     "prettier": "^3.3.3",
-    "prisma": "^6.19.0"
+    "prisma": "^6.19.0",
+    "ts-node": "^10.9.2"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }
