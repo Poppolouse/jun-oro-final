@@ -1,0 +1,22 @@
+{
+  "name": "jun-oro-v2-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Jun-Oro v2 monorepo for multi-app subdomain hosting (Cloudflare Pages + Render API + R2)",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "docs"
+  ],
+  "scripts": {
+    "build": "npm run build -w @jun-oro/portal",
+    "lint": "npm run lint -w @jun-oro/portal",
+    "test": "npm run test -w @jun-oro/portal",
+    "tsc": "npm run tsc -w @jun-oro/portal",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

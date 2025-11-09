@@ -1,0 +1,38 @@
+/* Design System uygulaması (docs/DESIGN-SYSTEM.md) */
+:root {
+  --bg: #F5F3EE;
+  --card: #EEEAE4;
+  --text: #2D2A26;
+  --text-secondary: #6B6661;
+  --accent: #D97757;
+  --radius: 18px;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, Arial, sans-serif; }
+
+.page { max-width: 1200px; margin: 0 auto; padding: 32px; }
+.header { margin-bottom: 24px; }
+.title { font-size: 24px; font-weight: 600; margin: 0 0 8px; }
+.subtitle { font-size: 16px; color: var(--text-secondary); margin: 0 0 8px; }
+
+.api-status { display: inline-block; padding: 6px 10px; border-radius: 12px; background: var(--card);
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
+  font-size: 14px;
+}
+.api-status.ok { color: #0a7b34; }
+.api-status.fail { color: #b00020; }
+
+.app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+
+.app-card { text-decoration: none; color: inherit; }
+.card-inner { background: var(--card); border-radius: var(--radius); padding: 24px;
+  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
+  transition: transform 350ms ease-in-out, box-shadow 350ms ease-in-out;
+}
+.card-inner:hover { transform: translateY(-4px);
+  box-shadow: 6px 6px 12px rgba(0,0,0,0.12), -6px -6px 12px rgba(255,255,255,0.75);
+}
+.card-title { font-size: 18px; font-weight: 600; margin: 0 0 6px; }
+.card-desc { font-size: 14px; color: var(--text-secondary); margin: 0; }
