@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasarım Önizleme: Hub Özellikleri</title>
+  <style>
+    /* Design System (styles.css'ten alındı) */
+    :root {
+      --bg: #F5F3EE;
+      --card: #EEEAE4;
+      --text: #2D2A26;
+      --text-secondary: #6B6661;
+      --accent: #D97757;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, Arial, sans-serif; padding: 20px; }
+
+    /* Yeni Component Stilleri */
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .header-left { flex-grow: 1; }
+    .title { font-size: 24px; font-weight: 600; margin: 0 0 8px; }
+    .subtitle { font-size: 16px; color: var(--text-secondary); margin: 0 0 8px; }
+
+    .search-bar {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      box-shadow: inset 2px 2px 5px rgba(255,255,255,0.5), inset -2px -2px 5px rgba(0,0,0,0.1);
+      border: none;
+      font-size: 16px;
+      color: var(--text);
+      width: 100%;
+      margin-bottom: 24px;
+    }
+    .search-bar::placeholder { color: var(--text-secondary); }
+
+    .user-menu { position: relative; }
+    .user-button {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 8px 16px;
+      box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
+      transition: transform 350ms ease-in-out, box-shadow 350ms ease-in-out;
+      font-size: 16px;
+      color: var(--text);
+      cursor: pointer;
+      border: none;
+    }
+    .user-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 6px 6px 12px rgba(0,0,0,0.12), -6px -6px 12px rgba(255,255,255,0.75);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
+      padding: 10px 0;
+      min-width: 150px;
+      z-index: 10;
+      list-style: none;
+      margin: 0;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item {
+      padding: 8px 16px;
+      color: var(--text);
+      text-decoration: none;
+      display: block;
+    }
+    .dropdown-item:hover { background: rgba(0,0,0,0.05); }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <header class="header">
+      <div class="header-left">
+        <h1 class="title">Jun‑Oro Portal</h1>
+        <p class="subtitle">Uygulamalar ve servisler için giriş noktası</p>
+      </div>
+      <div class="user-menu">
+        <button id="userBtn" class="user-button">Kullanıcı</button>
+        <ul id="dropdown" class="dropdown-menu">
+          <li><a href="#" class="dropdown-item">Profil</a></li>
+          <li><a href="#" class="dropdown-item">Ayarlar</a></li>
+          <li><hr style="margin: 5px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);"></li>
+          <li><a href="#" class="dropdown-item">Çıkış Yap</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <input type="text" class="search-bar" placeholder="Uygulamalarda ara... (Çok Yakında)">
+
+    <p><i>(Uygulama grid'i burada yer alacak)</i></p>
+  </div>
+
+  <script>
+    const userBtn = document.getElementById('userBtn');
+    const dropdown = document.getElementById('dropdown');
+
+    userBtn.addEventListener('click', () => {
+      dropdown.classList.toggle('open');
+    });
+
+    // Close dropdown if clicked outside
+    document.addEventListener('click', (event) => {
+      if (!userBtn.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+  </script>
+
+</body>
+</html>

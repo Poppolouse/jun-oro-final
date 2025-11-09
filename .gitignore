@@ -10,3 +10,5 @@ coverage/
 .wrangler/
 .gemini/
 gha-creds-*.json
+
+/generated/prisma

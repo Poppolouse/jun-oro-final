@@ -1,0 +1,147 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model api_keys {
+  id            String        @id
+  name          String
+  key           String        @unique
+  permissions   String[]      @default([])
+  lastUsedAt    DateTime?
+  expiresAt     DateTime?
+  isActive      Boolean       @default(true)
+  userId        String
+  applicationId String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime
+  applications  applications? @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  users         users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model app_stats {
+  id            String       @id
+  date          DateTime     @default(now())
+  pageViews     Int          @default(0)
+  uniqueUsers   Int          @default(0)
+  bandwidth     Float        @default(0)
+  errors        Int          @default(0)
+  uptime        Float        @default(100)
+  applicationId String
+  createdAt     DateTime     @default(now())
+  applications  applications @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@unique([date, applicationId])
+}
+
+model applications {
+  id           String           @id
+  name         String
+  description  String?
+  repository   String?
+  domain       String?
+  status       DeploymentStatus @default(DEVELOPMENT)
+  icon         String?
+  color        String?
+  userId       String
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime
+  api_keys     api_keys[]
+  app_stats    app_stats[]
+  users        users            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deployments  deployments[]
+  environments environments[]
+}
+
+model deployments {
+  id            String           @id
+  version       String
+  commitHash    String?
+  status        DeploymentStatus @default(PENDING)
+  environment   EnvironmentType  @default(DEVELOPMENT)
+  logs          String?
+  deployedAt    DateTime?
+  startedAt     DateTime
+  completedAt   DateTime?
+  applicationId String
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime
+  applications  applications     @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model environments {
+  id            String          @id
+  name          String
+  type          EnvironmentType @default(DEVELOPMENT)
+  url           String?
+  variables     Json?
+  isActive      Boolean         @default(true)
+  applicationId String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  applications  applications    @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+}
+
+model migrations {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(255)
+  executed_at DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model user_sessions {
+  id           String   @id
+  token        String   @unique
+  refreshToken String?  @unique
+  userAgent    String?
+  ipAddress    String?
+  isActive     Boolean  @default(true)
+  expiresAt    DateTime
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  users        users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id            String          @id
+  email         String          @unique
+  username      String          @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  avatar        String?
+  role          Role            @default(USER)
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  api_keys      api_keys[]
+  applications  applications[]
+  user_sessions user_sessions[]
+}
+
+enum DeploymentStatus {
+  DEVELOPMENT
+  STAGING
+  PRODUCTION
+  PENDING
+  BUILDING
+  DEPLOYING
+  SUCCESS
+  FAILED
+  ROLLBACK
+}
+
+enum EnvironmentType {
+  DEVELOPMENT
+  STAGING
+  PRODUCTION
+}
+
+enum Role {
+  USER
+  ADMIN
+}

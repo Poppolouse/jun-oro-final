@@ -17,6 +17,11 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "prettier": "^3.3.3"
+    "dotenv": "^17.2.3",
+    "prettier": "^3.3.3",
+    "prisma": "^6.19.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0"
   }
 }

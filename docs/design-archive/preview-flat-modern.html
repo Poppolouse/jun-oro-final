@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasarım Önizleme: Flat Modern Design</title>
+  <style>
+    /* Default Flat Modern Design System */
+    :root {
+      --bg: #F8F9FA;
+      --card: #FFFFFF;
+      --text: #212529;
+      --text-secondary: #6C757D;
+      --accent: #0D6EFD;
+      --radius: 12px;
+      --shadow-intensity: 0.1;
+      --padding: 24px;
+      --title-size: 24px;
+      --body-size: 16px;
+      --animation-speed: 300ms;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, Arial, sans-serif;
+      padding: 20px;
+      transition: background var(--animation-speed) ease;
+    }
+
+    /* Preview Components */
+    .page { max-width: 1200px; margin: 0 auto; padding: 32px; }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .header-left { flex-grow: 1; }
+    .title { font-size: var(--title-size); font-weight: 600; margin: 0 0 8px; color: var(--text); transition: font-size var(--animation-speed) ease; }
+    .subtitle { font-size: var(--body-size); color: var(--text-secondary); margin: 0 0 8px; transition: font-size var(--animation-speed) ease; }
+
+    .search-bar {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, var(--shadow-intensity));
+      border: 1px solid #E9ECEF;
+      font-size: var(--body-size);
+      color: var(--text);
+      width: 100%;
+      margin-bottom: 24px;
+      transition: all var(--animation-speed) ease;
+    }
+    .search-bar::placeholder { color: var(--text-secondary); }
+
+    .user-menu { position: relative; }
+    .user-button {
+      background: var(--accent);
+      border-radius: var(--radius);
+      padding: 10px 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, var(--shadow-intensity));
+      font-size: var(--body-size);
+      color: #FFFFFF;
+      cursor: pointer;
+      border: none;
+      transition: all var(--animation-speed) ease;
+    }
+    .user-button:hover { transform: translateY(-2px); }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 10px);
+      right: 0;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, var(--shadow-intensity));
+      padding: 10px 0;
+      min-width: 150px;
+      z-index: 10;
+      list-style: none;
+      margin: 0;
+      border: 1px solid #E9ECEF;
+      transition: all var(--animation-speed) ease;
+    }
+    .dropdown-menu.open { display: block; }
+    .dropdown-item { padding: 8px 16px; color: var(--text); text-decoration: none; display: block; }
+    .dropdown-item:hover { background: rgba(0,0,0,0.05); }
+
+    /* Design Playground */
+    .playground {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      padding: 20px;
+      width: 300px;
+      z-index: 100;
+    }
+    .playground h3 { margin: 0 0 15px; font-size: 18px; }
+    .playground .control { margin-bottom: 10px; }
+    .playground label { display: block; margin-bottom: 5px; font-size: 14px; color: #333; }
+    .playground input[type="range"], .playground input[type="color"], .playground input[type="number"] { width: 100%; }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <header class="header">
+      <div class="header-left">
+        <h1 class="title">Jun‑Oro Portal</h1>
+        <p class="subtitle">Uygulamalar ve servisler için giriş noktası</p>
+      </div>
+      <div class="user-menu">
+        <button id="userBtn" class="user-button">Kullanıcı</button>
+        <ul id="dropdown" class="dropdown-menu">
+          <li><a href="#" class="dropdown-item">Profil</a></li>
+          <li><a href="#" class="dropdown-item">Ayarlar</a></li>
+          <li><hr style="margin: 5px 0; border: none; border-top: 1px solid rgba(0,0,0,0.1);"></li>
+          <li><a href="#" class="dropdown-item">Çıkış Yap</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <input type="text" class="search-bar" placeholder="Uygulamalarda ara...">
+  </div>
+
+  <div class="playground">
+    <h3>Design Playground</h3>
+    <div class="control">
+      <label for="bgColor">Background Color</label>
+      <input type="color" id="bgColor" data-var="--bg" value="#F8F9FA">
+    </div>
+    <div class="control">
+      <label for="cardColor">Card Color</label>
+      <input type="color" id="cardColor" data-var="--card" value="#FFFFFF">
+    </div>
+    <div class="control">
+      <label for="accentColor">Accent Color</label>
+      <input type="color" id="accentColor" data-var="--accent" value="#0D6EFD">
+    </div>
+    <div class="control">
+      <label for="shadowIntensity">Shadow Intensity</label>
+      <input type="range" id="shadowIntensity" data-var="--shadow-intensity" min="0" max="0.3" step="0.01" value="0.1">
+    </div>
+    <div class="control">
+      <label for="borderRadius">Border Radius (px)</label>
+      <input type="range" id="borderRadius" data-var="--radius" data-unit="px" min="0" max="30" step="1" value="12">
+    </div>
+    <div class="control">
+      <label for="titleSize">Title Size (px)</label>
+      <input type="range" id="titleSize" data-var="--title-size" data-unit="px" min="18" max="40" step="1" value="24">
+    </div>
+     <button id="useSettingsBtn" style="width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 8px; margin-top: 10px; cursor: pointer;">Use These Settings</button>
+  </div>
+
+  <script>
+    // Dropdown functionality
+    const userBtn = document.getElementById('userBtn');
+    const dropdown = document.getElementById('dropdown');
+    userBtn.addEventListener('click', () => dropdown.classList.toggle('open'));
+    document.addEventListener('click', (e) => {
+      if (!userBtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+
+    // Design Playground functionality
+    const root = document.documentElement;
+    const controls = document.querySelectorAll('.playground .control input');
+    controls.forEach(input => {
+      input.addEventListener('input', (e) => {
+        const variable = e.target.dataset.var;
+        const unit = e.target.dataset.unit || '';
+        root.style.setProperty(variable, e.target.value + unit);
+      });
+    });
+
+    // "Use These Settings" button
+    const useSettingsBtn = document.getElementById('useSettingsBtn');
+    useSettingsBtn.addEventListener('click', () => {
+        const settings = {};
+        controls.forEach(input => {
+            const variable = input.dataset.var;
+            const value = input.value;
+            const unit = input.dataset.unit || '';
+            settings[variable] = value + unit;
+        });
+        console.log('Selected Design Settings:', settings);
+        alert('Ayarlar konsola yazdırıldı! Bu ayarları kopyalayıp bana verebilirsiniz.');
+    });
+  </script>
+
+</body>
+</html>

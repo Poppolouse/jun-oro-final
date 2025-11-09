@@ -1,11 +1,13 @@
 /* Design System uygulaması (docs/DESIGN-SYSTEM.md) */
 :root {
-  --bg: #F5F3EE;
-  --card: #EEEAE4;
-  --text: #2D2A26;
-  --text-secondary: #6B6661;
-  --accent: #D97757;
-  --radius: 18px;
+  --bg: #F8F9FA;
+  --card: #FFFFFF;
+  --text: #212529;
+  --text-secondary: #6C757D;
+  --accent: #0D6EFD;
+  --radius: 12px; /* Slightly smaller for flat design */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --transition-speed: 300ms;
 }
 
 * { box-sizing: border-box; }
@@ -13,26 +15,107 @@ html, body, #root { height: 100%; }
 body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, Arial, sans-serif; }
 
 .page { max-width: 1200px; margin: 0 auto; padding: 32px; }
-.header { margin-bottom: 24px; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 24px;
+  position: relative; /* For dropdown positioning */
+}
+.header-left { flex-grow: 1; } /* Allows header-left to take available space */
 .title { font-size: 24px; font-weight: 600; margin: 0 0 8px; }
 .subtitle { font-size: 16px; color: var(--text-secondary); margin: 0 0 8px; }
 
-.api-status { display: inline-block; padding: 6px 10px; border-radius: 12px; background: var(--card);
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
+.api-status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 8px; /* Adjusted for flat design */
+  background: var(--card);
+  box-shadow: 0 2px 4px var(--shadow-color); /* Subtle shadow */
   font-size: 14px;
+  margin-left: 16px; /* Space from title/subtitle */
 }
-.api-status.ok { color: #0a7b34; }
-.api-status.fail { color: #b00020; }
+.api-status.ok { color: #28a745; } /* Green for success */
+.api-status.fail { color: #dc3545; } /* Red for failure */
+
+/* Search Bar Styles */
+.search-bar {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 12px 20px;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  border: 1px solid #E9ECEF; /* Light border */
+  font-size: 16px;
+  color: var(--text);
+  width: 100%;
+  margin-bottom: 24px;
+  transition: all var(--transition-speed) ease;
+}
+.search-bar::placeholder { color: var(--text-secondary); }
+.search-bar:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); /* Focus ring */
+}
+
+/* User Menu Styles */
+.user-menu { position: relative; margin-left: 24px; } /* Space from API status */
+.user-button {
+  background: var(--accent);
+  border-radius: var(--radius);
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px var(--shadow-color);
+  font-size: 16px;
+  color: #FFFFFF;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-speed) ease;
+}
+.user-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 8px var(--shadow-color);
+  padding: 10px 0;
+  min-width: 150px;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  border: 1px solid #E9ECEF;
+  transition: all var(--transition-speed) ease;
+}
+.dropdown-menu.open { display: block; }
+.dropdown-item {
+  padding: 8px 16px;
+  color: var(--text);
+  text-decoration: none;
+  display: block;
+  transition: background var(--transition-speed) ease;
+}
+.dropdown-item:hover { background: rgba(0,0,0,0.05); }
 
 .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
 
 .app-card { text-decoration: none; color: inherit; }
-.card-inner { background: var(--card); border-radius: var(--radius); padding: 24px;
-  box-shadow: 5px 5px 10px rgba(0,0,0,0.1), -5px -5px 10px rgba(255,255,255,0.7);
-  transition: transform 350ms ease-in-out, box-shadow 350ms ease-in-out;
+.card-inner {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: 0 2px 4px var(--shadow-color); /* Subtle shadow */
+  transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+  border: 1px solid #E9ECEF; /* Light border */
 }
-.card-inner:hover { transform: translateY(-4px);
-  box-shadow: 6px 6px 12px rgba(0,0,0,0.12), -6px -6px 12px rgba(255,255,255,0.75);
+.card-inner:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 .card-title { font-size: 18px; font-weight: 600; margin: 0 0 6px; }
 .card-desc { font-size: 14px; color: var(--text-secondary); margin: 0; }

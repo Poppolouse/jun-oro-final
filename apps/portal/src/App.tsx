@@ -17,6 +17,9 @@ export default function App(): JSX.Element {
   const [apps, setApps] = React.useState<AppItem[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [showUserMenu, setShowUserMenu] = React.useState(false); // State for user menu visibility
+
+  const userMenuRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -43,15 +46,44 @@ export default function App(): JSX.Element {
     fetchData();
   }, []);
 
+  // Close user menu when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userMenuRef]);
+
+
   return (
     <div data-ers="1.3" className="page">
       <header className="header">
-        <h1 className="title">Jun‑Oro Portal</h1>
-        <p className="subtitle">Uygulamalar ve servisler için giriş noktası</p>
-        <div className={`api-status ${apiStatus}`}>
-          API Durumu: {apiStatus === 'unknown' ? 'kontrol ediliyor…' : apiStatus}
+        <div className="header-left">
+          <h1 className="title">Jun‑Oro Portal</h1>
+          <p className="subtitle">Uygulamalar ve servisler için giriş noktası</p>
+          <div className={`api-status ${apiStatus}`}>
+            API Durumu: {apiStatus === 'unknown' ? 'kontrol ediliyor…' : apiStatus}
+          </div>
+        </div>
+        <div className="user-menu" ref={userMenuRef}>
+          <button className="user-button" onClick={() => setShowUserMenu(!showUserMenu)}>
+            Kullanıcı
+          </button>
+          <ul className={`dropdown-menu ${showUserMenu ? 'open' : ''}`}>
+            <li><a href="#" className="dropdown-item">Profil</a></li>
+            <li><a href="#" className="dropdown-item">Ayarlar</a></li>
+            <li><hr /></li>
+            <li><a href="#" className="dropdown-item">Çıkış Yap</a></li>
+          </ul>
         </div>
       </header>
+
+      <input type="text" className="search-bar" placeholder="Uygulamalarda ara... (Çok Yakında)" />
 
       <div data-ers="1.3.1" className="app-grid">
         {loading && <p>Uygulamalar yükleniyor...</p>}
