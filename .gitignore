@@ -8,3 +8,5 @@ coverage/
 /.cache
 /.turbo
 .wrangler/
+.gemini/
+gha-creds-*.json
